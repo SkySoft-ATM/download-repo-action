@@ -21,7 +21,7 @@ async function run() {
 
         const zipPath = path.resolve(directory, `${branch}.zip`);
 
-        await download(token, owner, repo, branch, zipPath);
+        const handle = await download(token, owner, repo, branch, zipPath);
         console.log(`::set-output name=file::${zipPath}`);
 
     } catch (error) {
@@ -30,32 +30,27 @@ async function run() {
 }
 
 async function download(token, owner, repo, branch, zipPath) {
-    try {
-        const options = {
-            method: 'GET',
-            headers: {
-                Accept: 'application/octet-stream'
+    const options = {
+        method: 'GET',
+        headers: {
+            Accept: 'application/octet-stream'
+        }
+    };
+
+    const url = `https://github.com/${owner}/${repo}/archive/${branch}.zip?access_token=${token}`;
+    fetch(url, options)
+        .then(res => {
+            if (res.ok) {
+                return res
+            } else {
+                throw new Error(res.statusText);
             }
-        };
-    
-        const url = `https://github.com/${owner}/${repo}/archive/${branch}.zip?access_token=${token}`;
-        fetch(url, options)
-            .then(res => {
-                if(res.ok){
-                    return res
-                } else {
-                    throw new Error(res.statusText);
-                }
-            })
-            .then(res => {
-                const dest = fs.createWriteStream(zipPath);
-                res.body.pipe(dest);
-            });
-    }
-    catch(error){
-        throw error
-    }
-    
+        })
+        .then(res => {
+            const dest = fs.createWriteStream(zipPath);
+            res.body.pipe(dest);
+        });
+
 }
 
 run();
