@@ -27,7 +27,8 @@ async function run() {
                 Accept: 'application/json'
             }
         };
-        const url = `https://github.com/${owner}/${repo}/zipball/${branch}?access_token=${token}`;
+
+        const url = `https://api.github.com/repos/${owner}/${repo}/zipball/${branch}?access_token=${token}`;
 
         await fetch(url, options)
             .then(checkStatus)
@@ -35,7 +36,7 @@ async function run() {
                 const dest = fs.createWriteStream(zipPath);
                 res.body.pipe(dest);
             });
-            
+
         console.log(`::set-output name=file::${zipPath}`);
     } catch (error) {
         core.setFailed(error.message);
@@ -43,7 +44,6 @@ async function run() {
 }
 
 function checkStatus(res) {
-    console.log(res);
     if (res.ok) {
         return res;
     } else {
@@ -52,8 +52,3 @@ function checkStatus(res) {
 }
 
 run();
-
-function handleError(err) {
-    console.error(err)
-    core.setFailed(err.message)
-}
