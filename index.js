@@ -21,8 +21,20 @@ async function run() {
 
         const zipPath = path.resolve(directory, `${branch}.zip`);
 
-        let [res, error] = await download(token, owner, repo, branch, zipPath);
-        if(error) throw new Error('Could not download archive '+error.message);
+        const options = {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json'
+            }
+        };
+        const url = `https://github.com/${owner}/${repo}/archive/${branch}.zip?access_token=${token}`;
+        fetch(url, options)
+            .then(checkStatus)
+            .then(res => {
+                const dest = fs.createWriteStream(zipPath);
+                res.body.pipe(dest);
+            });
+
         console.log(res.statusText)
         console.log(`::set-output name=file::${zipPath}`);
 
@@ -31,29 +43,13 @@ async function run() {
     }
 }
 
-async function download(token, owner, repo, branch, zipPath) {
-    const options = {
-        method: 'GET',
-        headers: {
-            Accept: 'application/json'
-        }
-    };
-    const url = `https://github.com/${owner}/${repo}/archive/${branch}.zip?access_token=${token}`;
-    fetch(url, options)
-        .then(res => {
-            if (res.ok) {
-                return res;
-            }
-        })
-        .then(res => {
-            const dest = fs.createWriteStream(zipPath);
-            res.body.pipe(dest);
-            return ([res,undefined]);
-        })
-        .catch(error => {
-            return ([undefined, error]);
-        });
-}
+function checkStatus(res) {
+    if (res.ok) {
+      return res;
+    } else {
+      throw new Error(res.statusText);
+    }
+  }  
 
 run();
 
