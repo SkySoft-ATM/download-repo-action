@@ -35,19 +35,14 @@ async function run() {
                 const dest = fs.createWriteStream(zipPath);
                 res.body.pipe(dest);
             });
-            /*.catch(err => {
-                console.log(err.message);
-                return Promise.reject(err);
-            });*/
-
         console.log(`::set-output name=file::${zipPath}`);
-
     } catch (error) {
         core.setFailed(error.message);
     }
 }
 
 function checkStatus(res) {
+    console.log(res);
     if (res.ok) {
         return res;
     } else {
