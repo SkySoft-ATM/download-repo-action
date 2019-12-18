@@ -20,7 +20,7 @@ async function run() {
         core.info(`Directory: ${directory}`);
 
         const zipPath = path.resolve(directory, `${branch}.zip`);
-        console.log(zipPath);
+
         const options = {
             method: 'GET',
             headers: {
@@ -28,13 +28,14 @@ async function run() {
             }
         };
         const url = `https://github.com/${owner}/${repo}/zipball/${branch}?access_token=${token}`;
-        console.log(url);
+
         await fetch(url, options)
             .then(checkStatus)
             .then(res => {
                 const dest = fs.createWriteStream(zipPath);
                 res.body.pipe(dest);
             });
+            
         console.log(`::set-output name=file::${zipPath}`);
     } catch (error) {
         core.setFailed(error.message);

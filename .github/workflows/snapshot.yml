@@ -12,7 +12,7 @@ jobs:
         with:
           github-token: ${{secrets.BOT_TOKEN}}
           owner: "SkySoft-ATM"
-          repo: "gRPC-VC2015"
+          repo: "Common"
           branch: "master"
           dir: "./"  
       
