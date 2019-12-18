@@ -20,7 +20,7 @@ async function run() {
         core.info(`Directory: ${directory}`);
 
         const zipPath = path.resolve(directory, `${branch}.zip`);
-
+        console.log(zipPath);
         const options = {
             method: 'GET',
             headers: {
