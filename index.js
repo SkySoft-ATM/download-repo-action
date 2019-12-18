@@ -21,7 +21,7 @@ async function run() {
 
         const zipPath = path.resolve(directory, `${branch}.zip`);
 
-        const handle = await download(token, owner, repo, branch, zipPath);
+        await download(token, owner, repo, branch, zipPath).catch(handleError);
         console.log(`::set-output name=file::${zipPath}`);
 
     } catch (error) {
@@ -33,7 +33,7 @@ async function download(token, owner, repo, branch, zipPath) {
     const options = {
         method: 'GET',
         headers: {
-            Accept: 'application/octet-stream'
+            Accept: 'application/json'
         }
     };
 
@@ -54,3 +54,8 @@ async function download(token, owner, repo, branch, zipPath) {
 }
 
 run();
+
+function handleError(err) {
+    console.error(err)
+    core.setFailed(err.message)
+}
