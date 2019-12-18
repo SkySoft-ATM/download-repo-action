@@ -33,6 +33,9 @@ async function run() {
             .then(res => {
                 const dest = fs.createWriteStream(zipPath);
                 res.body.pipe(dest);
+            })
+            .catch(err => {
+                console.log(err.message);
             });
 
         console.log(res.statusText)
