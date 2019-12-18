@@ -29,14 +29,14 @@ async function run() {
         };
         const url = `https://github.com/${owner}/${repo}/zipball/${branch}?access_token=${token}`;
         fetch(url, options)
-            .then(checkStatus)
+            .then(res => checkStatus(res))
             .then(res => {
                 const dest = fs.createWriteStream(zipPath);
                 res.body.pipe(dest);
             })
             .catch(err => {
                 console.log(err.message);
-                //core.setFailed(error.message);
+                core.setFailed(error.message);
             });
 
         console.log(`::set-output name=file::${zipPath}`);
