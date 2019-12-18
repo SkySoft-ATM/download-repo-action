@@ -36,9 +36,9 @@ async function run() {
             })
             .catch(err => {
                 console.log(err.message);
+                //core.setFailed(error.message);
             });
 
-        console.log(res.statusText)
         console.log(`::set-output name=file::${zipPath}`);
 
     } catch (error) {
