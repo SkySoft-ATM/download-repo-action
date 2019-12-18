@@ -27,7 +27,7 @@ async function run() {
                 Accept: 'application/json'
             }
         };
-        const url = `https://github.com/${owner}/${repo}/archive/${branch}.zip?access_token=${token}`;
+        const url = `https://github.com/${owner}/${repo}/zipball/${branch}?access_token=${token}`;
         fetch(url, options)
             .then(checkStatus)
             .then(res => {
