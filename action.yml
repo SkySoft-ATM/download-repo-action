@@ -1,0 +1,27 @@
+name: download-repo-action
+description: Download specific repository as an archive file
+branding:
+  icon: 'tag'
+  color: 'gray-dark'
+inputs:
+  owner:  
+    description: Repository owner
+    required: true
+  repo:  
+    description: Repository name
+    required: true
+  dir:  
+    description: Path (relative or absolute) where to download the asset
+    default: ./
+  branch:
+    description: Branch to be downloaded
+    default: master
+  token:  
+    description: The GitHub token used to authenticate
+    required: true
+outputs:
+  file: 
+    description: The absolute file name corresponding to the archive downloaded
+runs:
+  using: node12
+  main: index.js

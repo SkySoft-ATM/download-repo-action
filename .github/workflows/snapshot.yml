@@ -1,0 +1,21 @@
+name: snapshot
+
+on: [push]
+
+jobs:
+  download-and-unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download archive
+        id: grpc-repo
+        uses: SkySoft-ATM/download-repo-action@master
+        with:
+          github-token: ${{secrets.BOT_TOKEN}}
+          owner: "SkySoft-ATM"
+          repo: "gRPC-VC2015"
+          branch: "master"
+          dir: "./"  
+      
+      - name: Unzip archive
+        run: unzip ${{ steps.grpc-repo.outputs.file }}
+        
