@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const fetch = require('node-fetch');
 
-async function run() {
+function run() {
     try {
         const token = core.getInput('github-token', { required: true });
         const debug = core.getInput('debug');
@@ -36,7 +36,7 @@ async function run() {
             })
             .catch(err => {
                 console.log(err.message);
-                core.setFailed(error.message);
+                throw err;
             });
 
         console.log(`::set-output name=file::${zipPath}`);
