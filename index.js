@@ -44,12 +44,16 @@ async function download(token, owner, repo, branch, zipPath) {
             if(res.ok){
                 return res
             } else {
-                throw new Error(res.statusText)
+                throw new Error(res.statusText);
             }
         })
         .then(res => {
             const dest = fs.createWriteStream(zipPath);
             res.body.pipe(dest);
+        })
+        .catch(err => {
+            console.error(err);
+            throw err;
         });
 }
 
