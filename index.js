@@ -38,23 +38,21 @@ async function download(token, owner, repo, branch, zipPath) {
             Accept: 'application/json'
         }
     };
-
     const url = `https://github.com/${owner}/${repo}/archive/${branch}.zip?access_token=${token}`;
     fetch(url, options)
         .then(res => {
             if (res.ok) {
-                return res
-            } else {
-                throw new Error(res.statusText);
+                return res;
             }
         })
         .then(res => {
             const dest = fs.createWriteStream(zipPath);
             res.body.pipe(dest);
-            return ([res,undefined])
+            return ([res,undefined]);
         })
-        .catch(error => Promise.resolve([undefined, error]));
-
+        .catch(error => {
+            return ([undefined, error]);
+        });
 }
 
 run();
