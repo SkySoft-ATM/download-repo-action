@@ -28,6 +28,7 @@ async function run() {
             }
         };
         const url = `https://github.com/${owner}/${repo}/zipball/${branch}?access_token=${token}`;
+        console.log(url)
         await fetch(url, options)
             .then(res => checkStatus(res))
             .then(res => {
