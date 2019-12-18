@@ -40,23 +40,22 @@ async function download(token, owner, repo, branch, zipPath) {
 
     const url = `https://github.com/${owner}/${repo}/archive/${branch}.zip?access_token=${token}`;
     fetch(url, options)
-        .then(checkStatus)
+        .then(res => {
+            if(res.ok){
+                return res
+            } else {
+                throw new Error(res.statusText)
+            }
+        })
         .then(res => {
             const dest = fs.createWriteStream(zipPath);
             res.body.pipe(dest);
         });
 }
 
-function checkStatus(res) {
-    if (res.ok) {
-        return res;
-    } else {
-        throw new Error(res.statusText);
-    }
-}
 function handleError(err) {
     console.error(err)
     core.setFailed(err.message)
 }
 
-run().catch(handleError);
+run();
