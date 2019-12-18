@@ -21,7 +21,9 @@ async function run() {
 
         const zipPath = path.resolve(directory, `${branch}.zip`);
 
-        await download(token, owner, repo, branch, zipPath).catch(handleError);
+        let [res, error] = await download(token, owner, repo, branch, zipPath);
+        if(error) throw new Error('Could not download archive '+error.message);
+        console.log(res.statusText)
         console.log(`::set-output name=file::${zipPath}`);
 
     } catch (error) {
@@ -49,7 +51,9 @@ async function download(token, owner, repo, branch, zipPath) {
         .then(res => {
             const dest = fs.createWriteStream(zipPath);
             res.body.pipe(dest);
-        });
+            return ([res,undefined])
+        })
+        .catch(error => Promise.resolve([undefined, error]));
 
 }
 
